@@ -1,6 +1,6 @@
 use khronos_egl as egl;
 use std::{rc::Rc, result, str::FromStr};
-use tracing::info;
+use thiserror::Error;
 use tracing_subscriber;
 use wayland_client::{
     delegate_noop,
@@ -15,7 +15,6 @@ use wayland_client::{
 use wayland_egl::WlEglSurface;
 use wayland_protocols::xdg::shell::client::{xdg_surface, xdg_toplevel, xdg_wm_base};
 
-use thiserror::Error;
 pub type Result<T, E = WaylandEGLStateError> = result::Result<T, E>;
 
 #[derive(Error, Debug)]
@@ -48,6 +47,7 @@ struct WaylandEGLState {
     xdg_toplevel: Option<xdg_toplevel::XdgToplevel>,
     wl_compositor: Option<wl_compositor::WlCompositor>,
 }
+
 impl WaylandEGLState {
     #[tracing::instrument]
     fn new() -> Result<Self, ConnectError> {
@@ -191,18 +191,19 @@ pub fn main() -> Result<(), Box<dyn std::error::Error>> {
         state.egl_context,
     )?;
 
+    gl_loader::init_gl();
+    gl::load_with(|s| gl_loader::get_proc_address(s) as *const _);
+
     // We do painting stuff here
     while state.running {
         event_queue.dispatch_pending(&mut state)?;
 
         tracing::event!(tracing::Level::DEBUG, "Rendering");
 
-        // XXX: Gl calls fail??
-        //
-        // unsafe {
-        //     gl::ClearColor(0.0 / 255 as f32, 79.0 / 255 as f32, 158.0 / 255 as f32, 1.0);
-        //     gl::Clear(gl::COLOR_BUFFER_BIT);
-        // }
+        unsafe {
+            gl::ClearColor(0.0 / 255 as f32, 79.0 / 255 as f32, 158.0 / 255 as f32, 1.0);
+            gl::Clear(gl::COLOR_BUFFER_BIT);
+        }
 
         egl.swap_buffers(state.egl_display.unwrap(), state.egl_surface.unwrap())?;
     }

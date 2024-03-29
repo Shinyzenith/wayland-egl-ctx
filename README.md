@@ -4,4 +4,4 @@ Example wayland xdg window driven using egl
 
 # TODO
 
-- [ ] Get GL calls to work :(
+- [x] Get GL calls to work

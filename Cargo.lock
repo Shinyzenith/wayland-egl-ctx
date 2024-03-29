@@ -66,6 +66,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "gl_loader"
+version = "0.1.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e32d96dd5f881490e537041d5532320812ba096097f07fccb4626578da0b99d3"
+dependencies = [
+ "cc",
+ "libc",
+]
+
+[[package]]
 name = "khronos-egl"
 version = "6.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -367,6 +377,7 @@ name = "wayland-egl-ctx"
 version = "0.1.0"
 dependencies = [
  "gl",
+ "gl_loader",
  "khronos-egl",
  "thiserror",
  "tracing",
