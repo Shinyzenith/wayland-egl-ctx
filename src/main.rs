@@ -7,7 +7,6 @@ use error::Result;
 use state::WaylandEGLState;
 use std::str::FromStr;
 
-
 pub fn main() -> Result<(), Box<dyn std::error::Error>> {
     tracing_subscriber::fmt()
         .with_max_level(tracing::Level::from_str("trace")?)

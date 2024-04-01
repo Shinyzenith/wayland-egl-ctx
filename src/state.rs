@@ -3,7 +3,7 @@ use crate::utils::load_shader;
 
 use gl::types::GLuint;
 use khronos_egl as egl;
-use std::{ffi::c_void, mem::transmute, rc::Rc};
+use std::{ffi::c_void, rc::Rc};
 use wayland_client::{
     protocol::{wl_compositor, wl_display::WlDisplay, wl_surface::WlSurface},
     ConnectError, Connection, Proxy,
@@ -201,7 +201,14 @@ impl WaylandEGLState {
 
             gl::UseProgram(self.gl_program);
 
-            gl::VertexAttribPointer(0, 3, gl::FLOAT, gl::FALSE, 0, transmute(&ptr[0]));
+            gl::VertexAttribPointer(
+                0,
+                3,
+                gl::FLOAT,
+                gl::FALSE,
+                0,
+                &ptr[0] as *const f32 as *const c_void,
+            );
 
             gl::EnableVertexAttribArray(0);
             gl::DrawArrays(gl::TRIANGLES, 0, 3);
@@ -209,7 +216,7 @@ impl WaylandEGLState {
     }
 
     pub fn validate_globals(&self) -> Result<()> {
-        if let None = self.xdg_wm_base {
+        if self.xdg_wm_base.is_none() {
             return Err(WaylandEGLStateError::XdgWmBaseMissing);
         } else if self.wl_compositor.is_none() {
             return Err(WaylandEGLStateError::WlCompositorMissing);
