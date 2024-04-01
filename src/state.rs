@@ -197,7 +197,7 @@ impl WaylandEGLState {
         let ptr: [gl::types::GLfloat; 9] = [0.0, 1.0, 0.0, -1.0, -1.0, 0.0, 1.0, -1.0, 0.0];
         unsafe {
             gl::ClearColor(1.0, 1.0, 1.0, 0.0);
-            gl::Clear(gl::CLEAR_BUFFER);
+            gl::Clear(gl::COLOR_BUFFER_BIT);
 
             gl::UseProgram(self.gl_program);
 
