@@ -102,6 +102,10 @@ impl Dispatch<xdg_toplevel::XdgToplevel, ()> for WaylandEGLState {
                         .clone()
                         .unwrap()
                         .resize(state.width, state.height, 0, 0);
+
+                    unsafe {
+                        gl::Viewport(0, 0, state.width, state.height);
+                    }
                     state.wl_surface.clone().unwrap().commit();
                 }
             }

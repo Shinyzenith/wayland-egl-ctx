@@ -196,8 +196,6 @@ impl WaylandEGLState {
     pub fn draw(self: &Self) {
         let ptr: [gl::types::GLfloat; 9] = [0.0, 1.0, 0.0, -1.0, -1.0, 0.0, 1.0, -1.0, 0.0];
         unsafe {
-            gl::Viewport(0, 0, self.width, self.height);
-
             gl::ClearColor(1.0, 1.0, 1.0, 0.0);
             gl::Clear(gl::CLEAR_BUFFER);
 
