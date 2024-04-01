@@ -6,7 +6,7 @@ mod utils;
 use error::Result;
 use state::WaylandEGLState;
 use std::str::FromStr;
-use tracing_subscriber;
+
 
 pub fn main() -> Result<(), Box<dyn std::error::Error>> {
     tracing_subscriber::fmt()

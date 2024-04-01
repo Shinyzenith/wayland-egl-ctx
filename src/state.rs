@@ -65,7 +65,7 @@ impl WaylandEGLState {
         })
     }
 
-    pub fn deinit(self: &Self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn deinit(&self) -> Result<(), Box<dyn std::error::Error>> {
         unsafe {
             gl::DeleteProgram(self.gl_program);
         }
@@ -81,7 +81,7 @@ impl WaylandEGLState {
         Ok(())
     }
 
-    pub fn init_egl(self: &mut Self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn init_egl(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         // Init gl
         gl_loader::init_gl();
         gl::load_with(|s| gl_loader::get_proc_address(s) as *const _);
@@ -152,16 +152,16 @@ impl WaylandEGLState {
         Ok(())
     }
 
-    fn init_program(self: &mut Self) -> Result<()> {
+    fn init_program(&mut self) -> Result<()> {
         let vert_shader = load_shader(
             gl::VERTEX_SHADER,
-            include_str!("./shaders/shader.vert").into(),
+            include_str!("./shaders/vert.glsl").into(),
         )
         .unwrap();
 
         let frag_shader = load_shader(
             gl::FRAGMENT_SHADER,
-            include_str!("./shaders/shader.frag").into(),
+            include_str!("./shaders/frag.glsl").into(),
         )
         .unwrap();
 
@@ -193,7 +193,7 @@ impl WaylandEGLState {
         Ok(())
     }
 
-    pub fn draw(self: &Self) {
+    pub fn draw(&self) {
         let ptr: [gl::types::GLfloat; 9] = [0.0, 1.0, 0.0, -1.0, -1.0, 0.0, 1.0, -1.0, 0.0];
         unsafe {
             gl::ClearColor(1.0, 1.0, 1.0, 0.0);
@@ -208,10 +208,10 @@ impl WaylandEGLState {
         }
     }
 
-    pub fn validate_globals(self: &Self) -> Result<()> {
+    pub fn validate_globals(&self) -> Result<()> {
         if let None = self.xdg_wm_base {
             return Err(WaylandEGLStateError::XdgWmBaseMissing);
-        } else if let None = self.wl_compositor {
+        } else if self.wl_compositor.is_none() {
             return Err(WaylandEGLStateError::WlCompositorMissing);
         }
 
