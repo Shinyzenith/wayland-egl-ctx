@@ -117,5 +117,17 @@ impl Dispatch<xdg_toplevel::XdgToplevel, ()> for WaylandEGLState {
     }
 }
 
+impl Dispatch<wl_surface::WlSurface, ()> for WaylandEGLState {
+    #[tracing::instrument(skip(_surface), ret, level = "trace")]
+    fn event(
+        _: &mut Self,
+        _surface: &wl_surface::WlSurface,
+        _: wl_surface::Event,
+        _: &(),
+        _: &Connection,
+        _: &QueueHandle<Self>,
+    ) {
+    }
+}
+
 delegate_noop!(WaylandEGLState: wl_compositor::WlCompositor);
-delegate_noop!(WaylandEGLState: wl_surface::WlSurface);
